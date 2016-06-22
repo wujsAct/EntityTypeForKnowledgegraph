@@ -4,11 +4,12 @@ __author__ = 'wujs'
 import numpy as np
 import linkmodel
 import math
+ceshi = '0'
 
 models = linkmodel.linkmodel
 dir_path = models.dir_path
 #get the entity standard type
-def getEntRightType(missentNum,fileaddr=dir_path+"/entity_missingtype_c.txt1", entity2idf=dir_path+"/entity_missingtype.txt1"):
+def getEntRightType(missentNum,fileaddr=dir_path+"/entity_missingtype_c"+ceshi+".txt", entity2idf=dir_path+"/entity_missingtype"+ceshi+".txt"):
     f1 = open(fileaddr,'r')
     entType_dict={}
     for line in f1.readlines():
@@ -36,10 +37,11 @@ def getEntRightType(missentNum,fileaddr=dir_path+"/entity_missingtype_c.txt1", e
 #计算precision
 
 
-#def gettypeMAP(typeNum, entityNum, entType_dict, entity2id,id2entity,fileaddr='E:/lunwen/source_code/ourmodels/entity/data/yelp'+"/results_clustype_pretype.txt"):
-def gettypeMAP(typeNum, entityNum, entType_dict, entity2id,id2entity,fileaddr=dir_path+"/pretype"):
+
+#def gettypeMAP(typeNum, entityNum, entType_dict, entity2id,id2entity,fileaddr='E:/lunwen/source_code/ourmodels/entity/data/food'+"/results_clustype_pretype"+ceshi+".txt"):
+#def gettypeMAP(typeNum, entityNum, entType_dict, entity2id,id2entity,fileaddr=dir_path+"/pretype"):
 #def gettypeMAP(typeNum, entityNum, entType_dict, entity2id,id2entity,fileaddr=dir_path+"/pretype_DCD"):
-#def gettypeMAP(typeNum, entityNum, entType_dict, entity2id,id2entity,fileaddr='E:/lunwen/source_code/ourmodels/entity/data/yelp'+"/figer_pretype.txt"):
+def gettypeMAP(typeNum, entityNum, entType_dict, entity2id,id2entity,fileaddr='E:/lunwen/source_code/ourmodels/entity/data/food'+"/figer_pretype"+ceshi+".txt"):
     #datamat = sio.loadmat(fileaddr)
     real_cluster = np.zeros((typeNum,1))
     pre_cluster = np.zeros((typeNum,1))
@@ -125,7 +127,8 @@ def gettypeMAP(typeNum, entityNum, entType_dict, entity2id,id2entity,fileaddr=di
     return meanap
     
 #missentNum=200;typeNum=15
-missentNum=460;typeNum=32
+#missentNum=467;typeNum=11
+missentNum=197;typeNum=8
 #missentNum=100;typeNum=30
 #missentNum = 20; typeNum = 10;
 #missentNum = 90 ;typeNum =60;
@@ -152,3 +155,4 @@ meanap = gettypeMAP(typeNum, missentNum, entType_dict, entity2id,id2entity)
 #        k=k+1
 #
 #print average_precision_score(y_true_new,y_score_new,average='weighted')
+t = {'3': 5, '4': 2}

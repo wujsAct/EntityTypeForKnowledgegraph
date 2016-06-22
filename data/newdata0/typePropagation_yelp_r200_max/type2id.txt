@@ -1,0 +1,8 @@
+/food/culinary_technique	0
+/location/offical_symbol_variety	1
+/food/beer_container	2
+/location/capital_category	3
+/food/drinking_establishment	4
+/food/culinary_tool	5
+/location/location	6
+/food/food	7

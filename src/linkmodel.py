@@ -8,17 +8,15 @@ Created on Mon Dec 14 16:38:44 2015
 import numpy as np
 from scipy.sparse import csr_matrix
 class linkmodel:
-    #此时relation的个数感觉有非常大的问题哈，这样我们在训练的时候，会与遇到很多问题的！
-    entityNum =2302;typeNum=32;relNum=20*2;
-    entfeatureDim =relNum
-    k = 1
-    dir_path = 'C:/Users/wujs/Desktop/ourdata/newdata'+str(k)+'/typePropagation_yelp_r20_cluster_1500'
+    entityNum =988;typeNum=8;relNum=200*2;
+    entfeatureDim =relNum+300
+    k = 0
+    dir_path = 'data/newdata'+str(k)+'/typePropagation_yelp_r200_max'
     print dir_path
-  #  dir_path = 'C:/Users/DELL/Desktop/ourdata/typePropagation_nyt_r50_cluster'
-   # dir_path = 'C:/Users/wujs/Desktop/ourdata/typePropagation_60_100'
-    untypeEntity = np.loadtxt(dir_path+'/entity_missingtype.txt'+str(k),dtype='int')-1
+ 
+    untypeEntity = np.loadtxt(dir_path+'/entity_missingtype'+str(k)+'.txt',dtype='int')-1
         
-        #the number of missing type entity
+    #the number of missing type entity
     missent = len(untypeEntity)
     print missent
     knowentNo = entityNum-missent
@@ -31,7 +29,7 @@ class linkmodel:
             k = k +1
     t = np.zeros((missent*typeNum,1),dtype='int')  
     unkownX = np.ones((missent*typeNum,1))
-    data = np.loadtxt(dir_path+'/entity2type.txt',dtype='int')-1  
+    data = np.loadtxt(dir_path+'/entityid2typeid.txt',dtype='int')-1  
         
     def getuntypeent(self):
         untypeEntity = self.untypeEntity
@@ -74,7 +72,6 @@ class linkmodel:
         #relNum = self.relNum
         #typeNum = self.typeNum
         knowy = np.loadtxt(dir_path+'/Y.txt')
-        
         Y = csr_matrix((knowy[:,2],(map(int,(knowy[:,0]-1)),
                      map(int,(knowy[:,1]-1)))),
                      shape=(entityNum,dim))        

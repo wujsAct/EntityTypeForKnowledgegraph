@@ -9,7 +9,7 @@ import linkmodel
 import numpy as np
 import pymongodemo
 
-class featureGeneration:
+class featureGeneration(object):
     lnkmodel=linkmodel.linkmodel()
     #entityNum = lnkmodel.entityNum
     relNum = lnkmodel.relNum
@@ -32,32 +32,12 @@ class featureGeneration:
     #Y2 = Y1[untypeEntity[:,0].tolist(),:]
     
     def getEntityTypeFeatures(self):
-#        datas = dok_matrix((self.knowentNo,self.typeNum))
-#        X = self.X
-#        print 'get ent types'
-#        for i in range(self.knowentNo):
-#            print i
-#            for j in range(self.typeNum):
-#                if X[i,j]!=0:
-#                    datas[i,j]=1
         return self.X
         
     def getEntFeature(self):
-#        datas = dok_matrix((self.knowentNo,self.rel_type),dtype='float')
-#        print 'get ent feature'
-#        for i in range(self.knowentNo):
-#            print i
-#            for j in range(self.rel_type):
-#                if self.Y[i,j] !=0:
-#                    datas[i,j]=self.Y[i,j]
         return self.Y
+        
     def getUntypeEntFeature(self):
-#        datas = dok_matrix((self.missent,self.rel_type),dtype='float')
-#        
-#        for i in range(self.missent):
-#            for j in range(self.rel_type):
-#                if self.Y2[i,j] !=0:
-#                    datas[i,j] = self.Y2[i,j]
         return self.Y2
      
     #转化成数据库的操作
@@ -65,7 +45,6 @@ class featureGeneration:
         print 'neg entity set\n'
         collName = 'NegEntitySetColl'
         coll = pymongodemo.get_collection(self.db,collName)
-        #negEntSet = {}
         entityNum,typeNum = np.shape(datas)
         for i in range(entityNum):
             print 'neg ent set',i
@@ -84,15 +63,13 @@ class featureGeneration:
                     for k in range(10):
                         tempList = tempList + str(slices[k])+'\t'
                     tempList = tempList.strip()
-                    #temp = str(i)+"_"+str(j)
-                    #negEntSet[temp]=tempList
+                    
                     items =  {"entid":i, "typeid":j, "NegEntitySet":tempList}
-                    pymongodemo.insert_one_doc(self.db,coll,items)    
-                    #print ("%s\t%s") %(temp,tempList)
+                    pymongodemo.insert_one_doc(self.db,coll,items)
+                    
         print 'finish generate neg entity set'
     #抽取操作也转换成数据库操作了！
     def getNegSet(self,i,j,collName,key):
-        #collName = 'NegEntitySetColl'
         coll = pymongodemo.get_collection(self.db,collName)
         items = {}
         items['entid'] = i
@@ -122,13 +99,10 @@ class featureGeneration:
                         if datas[i,k]!=1:
                             #tempList.append(k)
                             tempList = tempList + str(k)+'\t'
-                    #temp = str(i)+"_"+str(j)
-                    #negTypeSet[temp]=tempList
-                    #print ("%s\t%s") %(temp,tempList)
                     items =  {"entid":i, "typeid":j, "NegTypeSet":tempList}
                     pymongodemo.insert_one_doc(self.db,coll,items)
         print 'finish generate neg type set'
-        
+       
 fgg = featureGeneration()
 datas = fgg.getEntityTypeFeatures()
 #print datas

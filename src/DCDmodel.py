@@ -72,7 +72,7 @@ def DCDmodel(fgmodel):
     w = initx(typeNum,entFeatureDim)
     
     
-    for iter in range(20):
+    for iter in range(1000):
         print 'total iter',iter
         X = []
         for i in range(typeNum):
@@ -92,7 +92,7 @@ def DCDmodel(fgmodel):
                             lists = range(len(temps)-1)
                             #nums=len(lists)/2
                             #print 'neg ent',nums
-                            slices = random.sample(lists,2)
+                            slices = random.sample(lists,1)
                             for kr in slices:
                                 k = int(temps[kr])
                                 tempX = dok_matrix(fa[k,:].toarray()-fa[i,:].toarray())

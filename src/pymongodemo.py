@@ -12,7 +12,8 @@ def get_db():
     
     mongoclient= pymongo.MongoClient(host='192.168.0.7',port=50000)
     #fb15kdb = mongoclient.freebase_yelp_r50_cluster
-    fb15kdb = mongoclient.freebase_yelp_r20_cluster_part1
+  #  fb15kdb = mongoclient.freebase_yelp_r50_max_part1_1500
+    fb15kdb = mongoclient.freebase_yelp_r500_w2v_max_part0
     return fb15kdb
 
 def get_collection(db,collName):
