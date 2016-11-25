@@ -30,14 +30,26 @@ def getAhref(tags):
         co_occurence_ent.add(ai['href']+'\t'+ai.text)
   return co_occurence_ent
   
+def getWikipediaRedirect(title):
+  url = 'https://en.wikipedia.org/wiki/'+title
+  req = getRequest(url)
+  pages = urllib2.urlopen(req,timeout=200).read()
+  soup = BeautifulSoup(pages,"lxml")
+  tags = soup.find_all('span',class_='mw-redirectedfrom')
+  tag = tags[0]
+  a_item = tag.find_all('a',href=True)
+  ntitle = a_item[0]['title']
+  redEnt = None
+  if ntitle==title:
+    redEnt = soup.find_all('h1',class_='firstHeading')[0].text
+  return redEnt
   
-    
-    
-def get_candidate_entity(searchent = 'German'):
-  data = {'action': 'wbsearchentities', 'search':searchent, 'language':'en','limit':'50','format': 'json'}
+def get_candidate_entities(searchent):
+  data = {'action': 'wbsearchentities', 'search':searchent, 'language':'en','limit':'10','format': 'json'}
   data = urlencode(data)
   #search all related wiki entity
   url = 'https://www.wikidata.org/w/api.php?'+ data
+  print url
   req = getRequest(url)
   res = json.loads(urllib2.urlopen(req,timeout=200).read())
   candidate_ent = []
@@ -52,6 +64,7 @@ def get_candidate_entity(searchent = 'German'):
     print 'title:',title
     ent_item = {}
     ent_item['ids'] = ids
+    ent_item['title'] = title
     #if entity without description, we need to delete it. Not so popular!
     if 'description' in item:
       description = item[u'description']
@@ -64,7 +77,7 @@ def get_candidate_entity(searchent = 'German'):
         req = getRequest(url)
         properties = urllib2.urlopen(req,timeout=200).read()
         print 'properties'
-        soup = BeautifulSoup(properties)
+        soup = BeautifulSoup(properties,"lxml")
         
         print 'right here'
         tags = soup.find_all('div',class_='wikibase-snakview-value wikibase-snakview-variation-valuesnak')
@@ -78,7 +91,7 @@ def get_candidate_entity(searchent = 'German'):
         print url
         req = getRequest(url)
         pages = urllib2.urlopen(req,timeout=200).read()
-        soup = BeautifulSoup(pages)
+        soup = BeautifulSoup(pages, "lxml")
         tags = soup.find_all('p')
         description = tags[0].text.split('.')[0]
         print 'description:',description
@@ -92,7 +105,20 @@ def get_candidate_entity(searchent = 'German'):
       candidate_ent.append(ent_item)
   return candidate_ent,co_occurence_ent
 
+def getAllCanEnts(searchent):
+  candidate_ent=[];candidate_ent1=[];candidate_ent2=[];
+  co_occurence_ent=[];co_occurence_ent1=[];co_occurence_ent2=[]
+  candidate_ent1,co_occurence_ent1 = get_candidate_entities(searchent)
+  print len(candidate_ent1),len(co_occurence_ent1)
+  
+  if len(candidate_ent1)<=0 or candidate_ent1[0]['title']!=searchent:
+    redent = getWikipediaRedirect(searchent)
+    if redent:
+      candidate_ent2,co_occurence_ent2 = get_candidate_entities(redent)
+      print len(candidate_ent2),len(co_occurence_ent2)
+  
+  candidate_ent = candidate_ent1 + candidate_ent2
+  co_occurence_ent = co_occurence_ent1 + co_occurence_ent2
+  print len(candidate_ent),len(co_occurence_ent) 
 
-candidate_ent,co_occurence_ent = get_candidate_entity('obama')
-print len(candidate_ent)
-print len(co_occurence_ent)
+getAllCanEnts('obama')
